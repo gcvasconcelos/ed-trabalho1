@@ -40,6 +40,11 @@ void insereFinal(char valor, t_lista * l){
     }
     l->ultimo = novoultimo;
 }
+int estaVazia(t_lista * l){
+    if(l->primeiro == NULL)
+       return 1;
+    return 0;
+}
 int removeInicio(t_lista * l){
     if(estaVazia(l))
         return -1;
@@ -50,11 +55,6 @@ int removeInicio(t_lista * l){
     if(l->primeiro == NULL) //nao precisava disso aqui (linha 98)
        l->ultimo = NULL;
     return tmp;
-}
-int estaVazia(t_lista * l){
-    if(l->primeiro == NULL)
-       return 1;
-    return 0;
 }
 t_pilha * criaPilha(){
     t_pilha * p =  (t_pilha *)malloc(sizeof(t_pilha));
@@ -70,10 +70,25 @@ char desempilhar(t_pilha * p){
 int estaVaziaPilha(t_pilha * p){
     return estaVazia(p->l);
 }
+void printPilha(t_pilha *p){
+	if (p->l->primeiro == NULL){
+		printf("Pilha vazia.\n");
+	} else{
+		t_elemento *temp = p->l->primeiro;
+		int i = 0;
+
+		while(temp != NULL){
+			printf("Pos: %d\tDado: %c\n", i, temp->dado);
+			temp = temp->proximo;
+			i++;
+		}
+		printf("\n");
+	}
+}
 
 int main() {
     int i;
-    char infixa[50];
+    char infixa[50], aff;
     t_pilha *p = criaPilha();
 
     while (1) { //checa se todos os parenteses fecham
@@ -81,17 +96,28 @@ int main() {
         scanf("%s", infixa);
 
         for (i = 0; i < strlen(infixa); i++) {
-            if (infixa[i] == '(')
-            empilhar(infixa[i], p);
-            else if (infixa[i] == ')')
-            desempilhar(p);
+            //printf("%c\n", infixa[i]);
+            if (infixa[i] == '(' || infixa[i] == '[' || infixa[i] == '{'){
+                empilhar(infixa[i], p);
+                //printf("empilhou %c\n", infixa[i]);
+            }
+            else if (infixa[i] == ')' || infixa[i] == ']' || infixa[i] == '}'){
+                if (estaVaziaPilha(p)){
+                    printf("Formato invalido. Tente novamente.11111\n");
+                    break;
+                }
+                if ((p->l->primeiro->dado == '(' && infixa[i] == ')') || (p->l->primeiro->dado == '[' && infixa[i] == ']') || (p->l->primeiro->dado == '{' && infixa[i] == '}')){
+                    //printf("desempilhou %c\n", desempilhar(p)); //
+                    desempilhar(p);
+                }
+                else
+                    printf("Formato invalido. Tente novamente.222222\n");
+            }
         }
+        printPilha(p);
         if (estaVaziaPilha(p)){
             break;
         }
     }
-
-
-
     return 0;
 }
