@@ -1,13 +1,12 @@
 algoritmo
-	entrada e saida de dados
-		analise da string
+	//entrada e saida de dados
+		//analise da string
 			converter char pra int
 			observar numeros com mais de um algarismo
-			observar operadores e espacos " "
-	validacao da expressao
-		todos os parenteses fecham
-		operadores estao infixos
-		ver 3.2 algoritmo no pilha.pdf
+			//observar operadores e espacos " "
+	//validacao da expressao
+		//todos os parenteses fecham
+		//ver 3.2 algoritmo no pilha.pdf
 	transformacao infixa-posfixa
 		ver 3.3 algoritmo no pilha.pdf
 	avaliacao

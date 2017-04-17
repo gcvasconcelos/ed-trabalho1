@@ -85,10 +85,20 @@ void printPilha(t_pilha *p){
 		printf("\n");
 	}
 }
+int ehNumero(char ch){
+	if (ch == '0' || ch == '1' || ch == '2' || ch == '3' || ch == '4'ch == '5' || ch == '6' || ch == '7' || ch == '8' || ch == '9')
+		return 1;
+	return 0;
+}
+int ehOperador(char ch){
+	if (ch == '+' || ch == '-' || ch == '/' || ch == '*')
+		return 1;
+	return 0;
+}
 
 int main() {
     int i;
-    char infixa[50], aff;
+    char infixa[50], posfixa[50];
     t_pilha *p = criaPilha();
 
     while (1) { //checa se todos os parenteses fecham
@@ -96,30 +106,32 @@ int main() {
         scanf("%s", infixa);
 
         for (i = 0; i < strlen(infixa); i++) {
-            //printf("%c\n", infixa[i]);
-            if (infixa[i] == '(' || infixa[i] == '[' || infixa[i] == '{'){
+            if (infixa[i] == '(' || infixa[i] == '[' || infixa[i] == '{') //fazer funcoes pra substituir esse if e deixar a main mais limpa
                 empilhar(infixa[i], p);
-                //printf("empilhou %c\n", infixa[i]);
-            }
             else if (infixa[i] == ')' || infixa[i] == ']' || infixa[i] == '}'){
                 if (estaVaziaPilha(p)){
-                    printf("Formato invalido. Tente novamente.11111\n");
+                    printf("Formato invalido. Tente novamente.\n");
                     break;
                 }
-                if ((p->l->primeiro->dado == '(' && infixa[i] == ')') || (p->l->primeiro->dado == '[' && infixa[i] == ']') || (p->l->primeiro->dado == '{' && infixa[i] == '}')){
-                    //printf("desempilhou %c\n", desempilhar(p)); //
+                if ((p->l->primeiro->dado == '(' && infixa[i] == ')') || (p->l->primeiro->dado == '[' && infixa[i] == ']') || (p->l->primeiro->dado == '{' && infixa[i] == '}'))
                     desempilhar(p);
-                }
                 else
-                    printf("Formato invalido. Tente novamente.222222\n");
+                    printf("Formato invalido. Tente novamente.\n");
             }
         }
-        printPilha(p);
-        if (estaVaziaPilha(p)){
+        if (estaVaziaPilha(p))
             break;
-        }
 		while(!estaVaziaPilha(p))
 			desempilhar(p);
     }
+	for (i = 0; i < strlen(infixa); i++) {
+		if (ehNumero(infixa[i]))
+			empilhar(infixa[i], p);
+		if (ehOperador(infixa[i])){
+			while (!estaVaziaPilha(p)){
+
+			}
+		}
+	}
     return 0;
 }
