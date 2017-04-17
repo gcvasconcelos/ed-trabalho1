@@ -1,18 +1,16 @@
 algoritmo
 	entrada e saida de dados
-		gets puts 
-			string.h
-		analise da string 
+		analise da string
 			converter char pra int
 			observar numeros com mais de um algarismo
 			observar operadores e espacos " "
 	validacao da expressao
-		todos os parenteses fecham 
+		todos os parenteses fecham
 		operadores estao infixos
 		ver 3.2 algoritmo no pilha.pdf
 	transformacao infixa-posfixa
 		ver 3.3 algoritmo no pilha.pdf
-	avaliacao 
+	avaliacao
 		ver 3.4 algoritmo no pilha.pdf
 relatorio
 	min. 5 paginas
