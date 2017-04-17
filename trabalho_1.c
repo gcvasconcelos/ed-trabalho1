@@ -118,6 +118,8 @@ int main() {
         if (estaVaziaPilha(p)){
             break;
         }
+		while(!estaVaziaPilha(p))
+			desempilhar(p);
     }
     return 0;
 }
