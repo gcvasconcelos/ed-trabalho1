@@ -20,6 +20,9 @@ t_lista * criaLista(){
     l->ultimo = NULL;
     return l;
 }
+
+/*Fim declaracao de structs*/
+
 void insereInicio(char valor, t_lista * l){
     t_elemento * novoprimeiro = (t_elemento *)malloc(sizeof(t_elemento));
     novoprimeiro->dado = valor;
@@ -56,6 +59,9 @@ int removeInicio(t_lista * l){
        l->ultimo = NULL;
     return tmp;
 }
+
+/*Fim funcoes base*/
+
 t_pilha * criaPilha(){
     t_pilha * p =  (t_pilha *)malloc(sizeof(t_pilha));
     p->l = criaLista();
@@ -85,6 +91,9 @@ void printPilha(t_pilha *p){
 		printf("\n");
 	}
 }
+
+/*Fim funcoes pilha*/
+
 int ehNumero(char ch){
 	if (ch == '0' || ch == '1' || ch == '2' || ch == '3' || ch == '4' || ch == '5' || ch == '6' || ch == '7' || ch == '8' || ch == '9')
 		return 1;
@@ -110,7 +119,7 @@ int prioridade(char ch){
 
 int main() {
     int i;
-    char infixa[50], posfixa[50], temp[2];
+    char infixa[50], posfixa[50], temp[2], t;
     t_pilha *p = criaPilha();
 
     while (1) { //checa se todos os parenteses fecham
@@ -138,6 +147,7 @@ int main() {
     }
 
 	for (i = 0; i < strlen(infixa); i++) {
+		temp[0] = ' ';
 		temp[1] = ' ';
 		if (ehNumero(infixa[i])){
 			if (ehNumero(infixa[i+1])){
@@ -150,32 +160,37 @@ int main() {
 				strcat(posfixa, temp);
 			}
 		} else if (ehOperador(infixa[i])){
-			if (!estaVaziaPilha(p) && prioridade(p->l->primeiro->dado) >= prioridade(infixa[i])){
+			if (!estaVaziaPilha(p) && prioridade(p->l->primeiro->dado) <= prioridade(infixa[i])){
 				temp[0] = desempilhar(p);
-				strcat(posfixa, temp);
-			}
+				strcat(posfixa, temp);/**/
+			}	
 			empilhar(infixa[i], p);
 		} else if (infixa[i] == '(' || infixa[i] == '[' || infixa[i] == '{'){
 			empilhar(infixa[i], p);
 		} else if (infixa[i] == ')' || infixa[i] == ']' || infixa[i] == '}'){
-			char t;
 			if (infixa[i] == ')'){
 				do{
 					t = desempilhar(p);
-					temp[0] = t;
-					strcat(posfixa, temp);
+					if (t != '('){	
+						temp[0] = t;
+						strcat(posfixa, temp);
+					}
 				} while (t != '(');
 			} else if (infixa[i] == ']'){
 				do{
 					t = desempilhar(p);
-					temp[0] = t;
-					strcat(posfixa, temp);
+					if (t != '['){	
+						temp[0] = t;
+						strcat(posfixa, temp);
+					};
 				} while (t != '[');
 			} else if (infixa[i] == '}'){
 				do{
 					t = desempilhar(p);
-					temp[0] = t;
-					strcat(posfixa, temp);
+					if (t != '{'){	
+						temp[0] = t;
+						strcat(posfixa, temp);
+					}
 				} while (t != '{');
 			}
 		}
