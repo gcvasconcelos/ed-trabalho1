@@ -86,7 +86,7 @@ void printPilha(t_pilha *p){
 	}
 }
 int ehNumero(char ch){
-	if (ch == '0' || ch == '1' || ch == '2' || ch == '3' || ch == '4'ch == '5' || ch == '6' || ch == '7' || ch == '8' || ch == '9')
+	if (ch == '0' || ch == '1' || ch == '2' || ch == '3' || ch == '4' || ch == '5' || ch == '6' || ch == '7' || ch == '8' || ch == '9')
 		return 1;
 	return 0;
 }
@@ -95,10 +95,22 @@ int ehOperador(char ch){
 		return 1;
 	return 0;
 }
+int prioridade(char ch){
+	if (ch == '{')
+		return 4;
+	else if (ch == '[')
+		return 3;
+	else if (ch == '(')
+		return 2;
+	else if (ch == '*' || ch == '/')
+		return 1;
+	else if (ch == '+' || ch == '-')
+		return 0;
+}
 
 int main() {
     int i;
-    char infixa[50], posfixa[50];
+    char infixa[50], posfixa[50], temp[2];
     t_pilha *p = criaPilha();
 
     while (1) { //checa se todos os parenteses fecham
@@ -124,14 +136,60 @@ int main() {
 		while(!estaVaziaPilha(p))
 			desempilhar(p);
     }
-	for (i = 0; i < strlen(infixa); i++) {
-		if (ehNumero(infixa[i]))
-			empilhar(infixa[i], p);
-		if (ehOperador(infixa[i])){
-			while (!estaVaziaPilha(p)){
 
+	for (i = 0; i < strlen(infixa); i++) {
+		temp[1] = ' ';
+		if (ehNumero(infixa[i])){
+			if (ehNumero(infixa[i+1])){
+				temp[0] = infixa[i];
+				temp[1] = '\0';
+				strcat(posfixa, temp);
+			}
+			else{
+				temp[0] = infixa[i];
+				strcat(posfixa, temp);
+			}
+		} else if (ehOperador(infixa[i])){
+			if (!estaVaziaPilha(p) && prioridade(p->l->primeiro->dado) >= prioridade(infixa[i])){
+				temp[0] = desempilhar(p);
+				strcat(posfixa, temp);
+			}
+			empilhar(infixa[i], p);
+		} else if (infixa[i] == '(' || infixa[i] == '[' || infixa[i] == '{'){
+			empilhar(infixa[i], p);
+		} else if (infixa[i] == ')' || infixa[i] == ']' || infixa[i] == '}'){
+			char t;
+			if (infixa[i] == ')'){
+				do{
+					t = desempilhar(p);
+					temp[0] = t;
+					strcat(posfixa, temp);
+				} while (t != '(');
+			} else if (infixa[i] == ']'){
+				do{
+					t = desempilhar(p);
+					temp[0] = t;
+					strcat(posfixa, temp);
+				} while (t != '[');
+			} else if (infixa[i] == '}'){
+				do{
+					t = desempilhar(p);
+					temp[0] = t;
+					strcat(posfixa, temp);
+				} while (t != '{');
 			}
 		}
+		printf("ch: %c\ttot: %s\n", infixa[i], posfixa); //debug
+		printPilha(p); //debug
 	}
+
+	while(!estaVaziaPilha(p)){
+		temp[0] = desempilhar(p);
+		temp[1] = ' ';
+		strcat(posfixa, temp);
+	}
+
+	printf("\n");
+	printf("%s\n", posfixa); //debug
     return 0;
 }
