@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 typedef struct elemento{
 	char dado;
@@ -14,15 +15,14 @@ typedef struct pilha{
 	t_lista * l;
 }t_pilha;
 
+/*Fim declaracao de structs*/
+
 t_lista * criaLista(){
     t_lista * l = (t_lista *)malloc(sizeof(t_lista));
     l->primeiro = NULL;
     l->ultimo = NULL;
     return l;
 }
-
-/*Fim declaracao de structs*/
-
 void insereInicio(char valor, t_lista * l){
     t_elemento * novoprimeiro = (t_elemento *)malloc(sizeof(t_elemento));
     novoprimeiro->dado = valor;
@@ -104,6 +104,13 @@ int ehOperador(char ch){
 		return 1;
 	return 0;
 }
+int ehEscopo(char ch){
+	if (infixa[i] == '(' || infixa[i] == '[' || infixa[i] == '{')
+		return 1;
+	else if (infixa[i] == ')' || infixa[i] == ']' || infixa[i] == '}')
+		return -1;
+	return 0;
+}
 int prioridade(char ch){
 	if (ch == '{')
 		return 4;
@@ -116,6 +123,22 @@ int prioridade(char ch){
 	else if (ch == '+' || ch == '-')
 		return 0;
 }
+int strtoInt(char * str){
+	int num = 0, i;
+
+	for (i = 0; i < strlen(str); i++)
+	{
+		//printf("%d\n", srt[i]);
+		if (str[i] <= 48 || str[i] >= 57)/*verifica se o numero eh valido*/
+		{
+			printf("NUMERO INVALIDO\n");
+			return NULL;
+		}
+		num = num + (pow(10, (strlen(str)-i-1)))*((str[i])-48);/*num + (10^(i+1))*num*/
+	}
+
+	return num;
+}
 
 int main() {
     int i;
@@ -127,9 +150,9 @@ int main() {
         scanf("%s", infixa);
 
         for (i = 0; i < strlen(infixa); i++) {
-            if (infixa[i] == '(' || infixa[i] == '[' || infixa[i] == '{') //fazer funcoes pra substituir esse if e deixar a main mais limpa
+            if (ehEscopo(infixa[i] == 1)) //fazer funcoes pra substituir esse if e deixar a main mais limpa
                 empilhar(infixa[i], p);
-            else if (infixa[i] == ')' || infixa[i] == ']' || infixa[i] == '}'){
+            else if (ehEscopo(infixa[i] == -1)){
                 if (estaVaziaPilha(p)){
                     printf("Formato invalido. Tente novamente.\n");
                     break;
@@ -198,6 +221,7 @@ int main() {
 		printPilha(p); //debug
 	}
 
+
 	while(!estaVaziaPilha(p)){
 		temp[0] = desempilhar(p);
 		temp[1] = ' ';
@@ -206,5 +230,9 @@ int main() {
 
 	printf("\n");
 	printf("%s\n", posfixa); //debug
+	/*for (i = 0; i < count; ++i)
+	{
+		
+	}*/
     return 0;
 }
