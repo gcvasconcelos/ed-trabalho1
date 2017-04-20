@@ -179,37 +179,23 @@ int ehEscopo(char ch){
 	return 0;
 }
 int prioridade(char ch){
-	/*if (ch == '{')
-		return 5;
-	else if (ch == '[')
-		return 4;
-	else if (ch == '(')
-		return 3;*/
+	// if (ch == '{')
+	// 	return 5;
+	// else if (ch == '[')
+	// 	return 4;
+	// else if (ch == '(')
+	// 	return 3;
 	if (ch == '*' || ch == '/')
 		return 2;
 	else if (ch == '+' || ch == '-')
 		return 1;
 	return 0;
 }
-////////////////////////////////////////////////////////////funcao de conversao
-int strToInt(char * str){
-	int num = 0, i;
-	for (i = 0; i < strlen(str); i++){
-		if (str[i] <= 48 || str[i] >= 57)/*verifica se o numero eh valido*/
-			return -1; //nao compila quando tem isso
-		num += (pow(10, (strlen(str)-i-1)))*((str[i])-48);/*num + (10^(i+1))*num*/
-	}
-	return num;
-}
+////////////////////////////////////////////////////////////main
 
-//float chToFloat(ch)
-//{
-//	return (float)ch - 48;
-//}
-
-int main() {
+int main(int argc, char *argv[]) {
     int i;
-    char infixa[25] = "\0", posfixa[25] = "\0", temp[2], t;
+    char infixa[50] = "\0", posfixa[50] = "\0", temp[2], t;
     t_pilha *p = criaPilha();
 
     while (1) { //checa se todos os parenteses fecham
@@ -244,7 +230,7 @@ int main() {
 		if (ehNumero(infixa[i])){
 			if (ehNumero(infixa[i+1])){
 				temp[0] = infixa[i];
-				temp[1] = '\0';
+				temp[1] = '\0'; 
 				strcat(posfixa, temp);
 			}
 			else{
@@ -252,46 +238,48 @@ int main() {
 				strcat(posfixa, temp);
 			}
 		} else if (ehOperador(infixa[i])){
-			if (!estaVaziaPilha(p)){
-				printf("%c\t%c\n", p->l->primeiro->dado, infixa[i]);
-				printf("%i\t%i\n", prioridade(p->l->primeiro->dado), prioridade(infixa[i]));
-				if (prioridade(p->l->primeiro->dado) >= prioridade(infixa[i])){	
-					temp[0] = desempilhar(p);
-					if (!ehEscopo(temp[0]))
-						strcat(posfixa, temp);
-				}
-			}	
-			empilhar(infixa[i], p);
+			if (!estaVaziaPilha(p) && prioridade(p->l->primeiro->dado) >= prioridade(infixa[i])){
+				printf("%c\t%c\n", p->l->primeiro->dado, infixa[i]); //debug
+				printf("%i\t%i\n", prioridade(p->l->primeiro->dado), prioridade(infixa[i])); //debug
+				temp[0] = desempilhar(p);
+				if (!ehEscopo(temp[0]))
+					strcat(posfixa, temp);
+			}
+			empilhar(infixa[i], p);	
 		} else if (infixa[i] == '(' || infixa[i] == '[' || infixa[i] == '{'){
 			empilhar(infixa[i], p);
 		} else if (infixa[i] == ')' || infixa[i] == ']' || infixa[i] == '}'){
-			if (infixa[i] == ')'){
-				do{
-					t = desempilhar(p);
-					if (t != '('){	
-						temp[0] = t;
-						strcat(posfixa, temp);
-					}
-				} while (t != '(');
-			} else if (infixa[i] == ']'){
-				do{
-					t = desempilhar(p);
-					if (t != '['){	
-						temp[0] = t;
-						strcat(posfixa, temp);
-					};
-				} while (t != '[');
-			} else if (infixa[i] == '}'){
-				do{
-					t = desempilhar(p);
-					if (t != '{'){	
-						temp[0] = t;
-						strcat(posfixa, temp);
-					}
-				} while (t != '{');
+			switch(infixa[i]){
+				case ')':
+					do{
+						t = desempilhar(p);
+						if (t != '('){	
+							temp[0] = t;
+							strcat(posfixa, temp);
+						}
+					} while (t != '(');
+					break; 
+
+				case ']':
+					do{
+						t = desempilhar(p);
+						if (t != '['){	
+							temp[0] = t;
+							strcat(posfixa, temp);
+						};
+					} while (t != '[');
+					break;
+				case '}':
+					do{
+						t = desempilhar(p);
+						if (t != '{'){	
+							temp[0] = t;
+							strcat(posfixa, temp);
+						}
+					} while (t != '{');	
+					break;
 			}
 		}
-		printf("hue\n");
 		printf("ch: %c\ttot: %s\n", infixa[i], posfixa); //debug
 		printPilha(p); //debug
 	}
@@ -306,9 +294,8 @@ int main() {
     t_pilhaf *pf = criaPilhaf();
     
 	for (i = 0; i < strlen(posfixa); i++){
-		if(ehNumero(posfixa[i])){//essa str posfixa tem que ser trocada por uma str temp com o numero
-			empilharf((float)posfixa[i]-48, pf);//a ser convertido
-			//printf("%f\n", (float)posfixa[i]-48);
+		if(ehNumero(posfixa[i])){
+			empilharf((float)posfixa[i]-48, pf);
 		} else if(ehOperador(posfixa[i])){
 			a = desempilharf(pf);
 			b = desempilharf(pf);
@@ -317,18 +304,19 @@ int main() {
 					c = b + a;
 					break;
 				case '-':
-					c = b - a; //checar se a ordem esta certa
+					c = b - a;
 					break;
 				case '*':
 					c = b * a;
 					break;
 				case '/':
-					c = b / a; //checar se a ordem esta certa
+					c = b / a;
 					break;
 			}
 			empilharf(c, pf);
-			printPilhaf(pf);
+			printPilhaf(pf); //debug
 		}
-	}	
+	}
+	printf("\nResultado: %.1f\n", desempilharf(pf));	
     return 0;
 }
