@@ -4,7 +4,7 @@
 #include <math.h>
 
 /////////////////////////////////////////////////////////////lista e pilha para char
-typedef struct elemento{
+typedef struct elemento{ 
 	char dado;
 	struct elemento * proximo;
 }t_elemento;
@@ -16,7 +16,7 @@ typedef struct pilha{
 	t_lista * l;
 }t_pilha;
 /////////////////////////////////////////////////////////////lista e pilha para float
-typedef struct elementof{
+typedef struct elementof{ 
 	float dado;
 	struct elementof * proximo;
 }t_elementof;
@@ -82,7 +82,7 @@ char desempilhar(t_pilha *p){
     return removeInicio(p->l);
 }
 int estaVaziaPilha(t_pilha *p){
-    return estaVazia(p->l);	
+    return estaVazia(p->l);
 }
 void printPilha(t_pilha *p){
 	if (p->l->primeiro == NULL){
@@ -192,15 +192,15 @@ int prioridade(char ch){
 	return 0;
 }
 ////////////////////////////////////////////////////////////funcao de conversao
-// int strToInt(char * str){
-// 	int num = 0, i;
-// 	for (i = 0; i < strlen(str); i++){
-// 		if (str[i] <= 48 || str[i] >= 57)verifica se o numero eh valido
-// 			return -1; //nao compila quando tem isso
-// 		num += (pow(10, (strlen(str)-i-1)))*((str[i])-48);/*num + (10^(i+1))*num*/
-// 	}
-// 	return num;
-// }
+int strToInt(char * str){
+	int num = 0, i;
+	for (i = 0; i < strlen(str); i++){
+		if (str[i] <= 48 || str[i] >= 57)/*verifica se o numero eh valido*/
+			return -1; //nao compila quando tem isso
+		num += (pow(10, (strlen(str)-i-1)))*((str[i])-48);/*num + (10^(i+1))*num*/
+	}
+	return num;
+}
 
 //float chToFloat(ch)
 //{
@@ -253,14 +253,14 @@ int main() {
 			}
 		} else if (ehOperador(infixa[i])){
 			if (!estaVaziaPilha(p)){
-				printf("%c\t%c\n", p->l->primeiro->dado, infixa[i]); //debug
-				printf("%i\t%i\n", prioridade(p->l->primeiro->dado), prioridade(infixa[i])); //debug
-				if (prioridade(p->l->primeiro->dado) >= prioridade(infixa[i])){ //debug
+				printf("%c\t%c\n", p->l->primeiro->dado, infixa[i]);
+				printf("%i\t%i\n", prioridade(p->l->primeiro->dado), prioridade(infixa[i]));
+				if (prioridade(p->l->primeiro->dado) >= prioridade(infixa[i])){	
 					temp[0] = desempilhar(p);
 					if (!ehEscopo(temp[0]))
 						strcat(posfixa, temp);
 				}
-			}
+			}	
 			empilhar(infixa[i], p);
 		} else if (infixa[i] == '(' || infixa[i] == '[' || infixa[i] == '{'){
 			empilhar(infixa[i], p);
@@ -268,7 +268,7 @@ int main() {
 			if (infixa[i] == ')'){
 				do{
 					t = desempilhar(p);
-					if (t != '('){
+					if (t != '('){	
 						temp[0] = t;
 						strcat(posfixa, temp);
 					}
@@ -276,7 +276,7 @@ int main() {
 			} else if (infixa[i] == ']'){
 				do{
 					t = desempilhar(p);
-					if (t != '['){
+					if (t != '['){	
 						temp[0] = t;
 						strcat(posfixa, temp);
 					};
@@ -284,13 +284,14 @@ int main() {
 			} else if (infixa[i] == '}'){
 				do{
 					t = desempilhar(p);
-					if (t != '{'){
+					if (t != '{'){	
 						temp[0] = t;
 						strcat(posfixa, temp);
 					}
 				} while (t != '{');
 			}
 		}
+		printf("hue\n");
 		printf("ch: %c\ttot: %s\n", infixa[i], posfixa); //debug
 		printPilha(p); //debug
 	}
@@ -300,10 +301,10 @@ int main() {
 		strcat(posfixa, temp);
 	}
 	printf("\nEXPRESSAO POSFIXA --> %s\n", posfixa); //debug
-
+	
     float a, b, c;
     t_pilhaf *pf = criaPilhaf();
-
+    
 	for (i = 0; i < strlen(posfixa); i++){
 		if(ehNumero(posfixa[i])){//essa str posfixa tem que ser trocada por uma str temp com o numero
 			empilharf((float)posfixa[i]-48, pf);//a ser convertido
@@ -328,6 +329,6 @@ int main() {
 			empilharf(c, pf);
 			printPilhaf(pf);
 		}
-	}
+	}	
     return 0;
 }
