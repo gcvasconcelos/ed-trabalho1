@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
+/////////////////////////////////////////////////////////////lista e pilha para char
 typedef struct elemento{
 	char dado;
 	struct elemento * proximo;
@@ -13,14 +15,26 @@ typedef struct lista{
 typedef struct pilha{
 	t_lista * l;
 }t_pilha;
-
+/////////////////////////////////////////////////////////////lista e pilha para float
+typedef struct elementof{
+	float dado;
+	struct elementof * proximo;
+}t_elementof;
+typedef struct listaf{
+	t_elementof * primeiro;
+	t_elementof * ultimo;
+}t_listaf;
+typedef struct pilhaf{
+	t_listaf * l;
+}t_pilhaf;
+////////////////////////////////////////////////////////////funcoes de lista e pilha para char
 t_lista * criaLista(){
     t_lista * l = (t_lista *)malloc(sizeof(t_lista));
     l->primeiro = NULL;
     l->ultimo = NULL;
     return l;
 }
-void insereInicio(char valor, t_lista * l){
+void insereInicio(char valor, t_lista *l){
     t_elemento * novoprimeiro = (t_elemento *)malloc(sizeof(t_elemento));
     novoprimeiro->dado = valor;
     novoprimeiro->proximo = l->primeiro;
@@ -29,7 +43,7 @@ void insereInicio(char valor, t_lista * l){
         l->ultimo = novoprimeiro;
     }
 }
-void insereFinal(char valor, t_lista * l){
+void insereFinal(char valor, t_lista *l){
     t_elemento * novoultimo = (t_elemento *)malloc(sizeof(t_elemento));
     novoultimo->dado = valor;
     novoultimo->proximo = NULL;
@@ -40,12 +54,12 @@ void insereFinal(char valor, t_lista * l){
     }
     l->ultimo = novoultimo;
 }
-int estaVazia(t_lista * l){
+int estaVazia(t_lista *l){
     if(l->primeiro == NULL)
        return 1;
     return 0;
 }
-int removeInicio(t_lista * l){
+int removeInicio(t_lista *l){
     if(estaVazia(l))
         return -1;
     int tmp = l->primeiro->dado;
@@ -61,14 +75,14 @@ t_pilha * criaPilha(){
     p->l = criaLista();
     return p;
 }
-void empilhar(char valor,t_pilha * p){
+void empilhar(char valor,t_pilha *p){
     insereInicio(valor, p->l);
 }
-char desempilhar(t_pilha * p){
+char desempilhar(t_pilha *p){
     return removeInicio(p->l);
 }
-int estaVaziaPilha(t_pilha * p){
-    return estaVazia(p->l);
+int estaVaziaPilha(t_pilha *p){
+    return estaVazia(p->l);	
 }
 void printPilha(t_pilha *p){
 	if (p->l->primeiro == NULL){
@@ -85,6 +99,68 @@ void printPilha(t_pilha *p){
 		printf("\n");
 	}
 }
+////////////////////////////////////////////////////////////funcoes de lista e pilha para float
+t_listaf * criaListaf(){
+    t_listaf * l = (t_listaf *)malloc(sizeof(t_listaf));
+    l->primeiro = NULL;
+    l->ultimo = NULL;
+    return l;
+}
+void insereIniciof(float valor, t_listaf *l){
+    t_elementof * novoprimeiro = (t_elementof *)malloc(sizeof(t_elementof));
+    novoprimeiro->dado = valor;
+    novoprimeiro->proximo = l->primeiro;
+    l->primeiro = novoprimeiro;
+    if(l->ultimo == NULL){
+        l->ultimo = novoprimeiro;
+    }
+}
+int estaVaziaf(t_listaf *l){
+    if(l->primeiro == NULL)
+       return 1;
+    return 0;
+}
+float removeIniciof(t_listaf * l){
+    if(estaVaziaf(l))
+        return -1;
+    float tmp = l->primeiro->dado;
+    t_elementof * removido = l->primeiro;
+    l->primeiro = l->primeiro->proximo;
+    free(removido);
+    if(l->primeiro == NULL) //nao precisava disso aqui (linha 98)
+       l->ultimo = NULL;
+    return tmp;
+}
+t_pilhaf * criaPilhaf(){
+    t_pilhaf * p =  (t_pilhaf *)malloc(sizeof(t_pilhaf));
+    p->l = criaListaf();
+    return p;
+}
+void empilharf(float valor, t_pilhaf *p){
+    insereIniciof(valor, p->l);
+}
+float desempilharf(t_pilhaf * p){
+    return removeIniciof(p->l);
+}
+int estaVaziaPilhaf(t_pilhaf * p){
+    return estaVaziaf(p->l);
+}
+void printPilhaf(t_pilhaf *p){
+	if (p->l->primeiro == NULL){
+		printf("Pilha vazia.\n");
+	} else{
+		t_elementof *temp = p->l->primeiro;
+		int i = 0;
+
+		while(temp != NULL){
+			printf("Pos: %d\tDado: %.1f\n", i, temp->dado);
+			temp = temp->proximo;
+			i++;
+		}
+		printf("\n");
+	}
+}
+////////////////////////////////////////////////////////////funcoes de comparacao
 int ehNumero(char ch){
 	if (ch == '0' || ch == '1' || ch == '2' || ch == '3' || ch == '4' || ch == '5' || ch == '6' || ch == '7' || ch == '8' || ch == '9')
 		return 1;
@@ -95,22 +171,45 @@ int ehOperador(char ch){
 		return 1;
 	return 0;
 }
-int prioridade(char ch){
-	if (ch == '{')
-		return 4;
-	else if (ch == '[')
-		return 3;
-	else if (ch == '(')
-		return 2;
-	else if (ch == '*' || ch == '/')
+int ehEscopo(char ch){
+	if (ch == '(' || ch == '[' || ch == '{')
 		return 1;
-	else if (ch == '+' || ch == '-')
-		return 0;
+	else if (ch == ')' || ch == ']' || ch == '}')
+		return -1;
+	return 0;
 }
+int prioridade(char ch){
+	/*if (ch == '{')
+		return 5;
+	else if (ch == '[')
+		return 4;
+	else if (ch == '(')
+		return 3;*/
+	if (ch == '*' || ch == '/')
+		return 2;
+	else if (ch == '+' || ch == '-')
+		return 1;
+	return 0;
+}
+////////////////////////////////////////////////////////////funcao de conversao
+// int strToInt(char * str){
+// 	int num = 0, i;
+// 	for (i = 0; i < strlen(str); i++){
+// 		if (str[i] <= 48 || str[i] >= 57)verifica se o numero eh valido
+// 			return -1; //nao compila quando tem isso
+// 		num += (pow(10, (strlen(str)-i-1)))*((str[i])-48);/*num + (10^(i+1))*num*/
+// 	}
+// 	return num;
+// }
+
+//float chToFloat(ch)
+//{
+//	return (float)ch - 48;
+//}
 
 int main() {
     int i;
-    char infixa[50], posfixa[50], temp[2];
+    char infixa[25] = "\0", posfixa[25] = "\0", temp[2], t;
     t_pilha *p = criaPilha();
 
     while (1) { //checa se todos os parenteses fecham
@@ -118,9 +217,9 @@ int main() {
         scanf("%s", infixa);
 
         for (i = 0; i < strlen(infixa); i++) {
-            if (infixa[i] == '(' || infixa[i] == '[' || infixa[i] == '{') //fazer funcoes pra substituir esse if e deixar a main mais limpa
+            if (ehEscopo(infixa[i] == 1)) //fazer funcoes pra substituir esse if e deixar a main mais limpa
                 empilhar(infixa[i], p);
-            else if (infixa[i] == ')' || infixa[i] == ']' || infixa[i] == '}'){
+            else if (ehEscopo(infixa[i] == -1)){
                 if (estaVaziaPilha(p)){
                     printf("Formato invalido. Tente novamente.\n");
                     break;
@@ -136,8 +235,11 @@ int main() {
 		while(!estaVaziaPilha(p))
 			desempilhar(p);
     }
-
+    printf("\nPOSFIXA --> %s\n", posfixa); //debug
+    puts(posfixa); //debug
+    printf("\n"); //debug
 	for (i = 0; i < strlen(infixa); i++) {
+		temp[0] = ' ';
 		temp[1] = ' ';
 		if (ehNumero(infixa[i])){
 			if (ehNumero(infixa[i+1])){
@@ -150,46 +252,82 @@ int main() {
 				strcat(posfixa, temp);
 			}
 		} else if (ehOperador(infixa[i])){
-			if (!estaVaziaPilha(p) && prioridade(p->l->primeiro->dado) >= prioridade(infixa[i])){
-				temp[0] = desempilhar(p);
-				strcat(posfixa, temp);
+			if (!estaVaziaPilha(p)){
+				printf("%c\t%c\n", p->l->primeiro->dado, infixa[i]); //debug
+				printf("%i\t%i\n", prioridade(p->l->primeiro->dado), prioridade(infixa[i])); //debug
+				if (prioridade(p->l->primeiro->dado) >= prioridade(infixa[i])){ //debug
+					temp[0] = desempilhar(p);
+					if (!ehEscopo(temp[0]))
+						strcat(posfixa, temp);
+				}
 			}
 			empilhar(infixa[i], p);
 		} else if (infixa[i] == '(' || infixa[i] == '[' || infixa[i] == '{'){
 			empilhar(infixa[i], p);
 		} else if (infixa[i] == ')' || infixa[i] == ']' || infixa[i] == '}'){
-			char t;
 			if (infixa[i] == ')'){
 				do{
 					t = desempilhar(p);
-					temp[0] = t;
-					strcat(posfixa, temp);
+					if (t != '('){
+						temp[0] = t;
+						strcat(posfixa, temp);
+					}
 				} while (t != '(');
 			} else if (infixa[i] == ']'){
 				do{
 					t = desempilhar(p);
-					temp[0] = t;
-					strcat(posfixa, temp);
+					if (t != '['){
+						temp[0] = t;
+						strcat(posfixa, temp);
+					};
 				} while (t != '[');
 			} else if (infixa[i] == '}'){
 				do{
 					t = desempilhar(p);
-					temp[0] = t;
-					strcat(posfixa, temp);
+					if (t != '{'){
+						temp[0] = t;
+						strcat(posfixa, temp);
+					}
 				} while (t != '{');
 			}
 		}
 		printf("ch: %c\ttot: %s\n", infixa[i], posfixa); //debug
 		printPilha(p); //debug
 	}
-
 	while(!estaVaziaPilha(p)){
 		temp[0] = desempilhar(p);
 		temp[1] = ' ';
 		strcat(posfixa, temp);
 	}
+	printf("\nEXPRESSAO POSFIXA --> %s\n", posfixa); //debug
 
-	printf("\n");
-	printf("%s\n", posfixa); //debug
+    float a, b, c;
+    t_pilhaf *pf = criaPilhaf();
+
+	for (i = 0; i < strlen(posfixa); i++){
+		if(ehNumero(posfixa[i])){//essa str posfixa tem que ser trocada por uma str temp com o numero
+			empilharf((float)posfixa[i]-48, pf);//a ser convertido
+			//printf("%f\n", (float)posfixa[i]-48);
+		} else if(ehOperador(posfixa[i])){
+			a = desempilharf(pf);
+			b = desempilharf(pf);
+			switch (posfixa[i]){
+				case '+':
+					c = b + a;
+					break;
+				case '-':
+					c = b - a; //checar se a ordem esta certa
+					break;
+				case '*':
+					c = b * a;
+					break;
+				case '/':
+					c = b / a; //checar se a ordem esta certa
+					break;
+			}
+			empilharf(c, pf);
+			printPilhaf(pf);
+		}
+	}
     return 0;
 }
