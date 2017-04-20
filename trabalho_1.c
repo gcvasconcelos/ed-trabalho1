@@ -172,19 +172,13 @@ int ehOperador(char ch){
 	return 0;
 }
 int ehEscopo(char ch){
-	if (ch == '(' || ch == '[' || ch == '{')
+	if (ch == '(')
 		return 1;
-	else if (ch == ')' || ch == ']' || ch == '}')
+	else if (ch == ')')
 		return -1;
 	return 0;
 }
 int prioridade(char ch){
-	// if (ch == '{')
-	// 	return 5;
-	// else if (ch == '[')
-	// 	return 4;
-	// else if (ch == '(')
-	// 	return 3;
 	if (ch == '*' || ch == '/')
 		return 2;
 	else if (ch == '+' || ch == '-')
@@ -192,11 +186,12 @@ int prioridade(char ch){
 	return 0;
 }
 ////////////////////////////////////////////////////////////main
-
 int main(int argc, char *argv[]) {
     int i;
     char infixa[50] = "\0", posfixa[50] = "\0", temp[2], t;
+    float a, b, c;
     t_pilha *p = criaPilha();
+    t_pilhaf *pf = criaPilhaf();
 
     while (1) { //checa se todos os parenteses fecham
         printf("Digite a expressao na forma infixa:");
@@ -210,7 +205,7 @@ int main(int argc, char *argv[]) {
                     printf("Formato invalido. Tente novamente.\n");
                     break;
                 }
-                if ((p->l->primeiro->dado == '(' && infixa[i] == ')') || (p->l->primeiro->dado == '[' && infixa[i] == ']') || (p->l->primeiro->dado == '{' && infixa[i] == '}'))
+                if (p->l->primeiro->dado == '(' && infixa[i] == ')')
                     desempilhar(p);
                 else
                     printf("Formato invalido. Tente novamente.\n");
@@ -221,9 +216,9 @@ int main(int argc, char *argv[]) {
 		while(!estaVaziaPilha(p))
 			desempilhar(p);
     }
-    printf("\nPOSFIXA --> %s\n", posfixa); //debug
-    puts(posfixa); //debug
-    printf("\n"); //debug
+    // printf("\nPOSFIXA --> %s\n", posfixa); //debug
+    // puts(posfixa); //debug
+    // printf("\n"); //debug
 	for (i = 0; i < strlen(infixa); i++) {
 		temp[0] = ' ';
 		temp[1] = ' ';
@@ -239,60 +234,33 @@ int main(int argc, char *argv[]) {
 			}
 		} else if (ehOperador(infixa[i])){
 			if (!estaVaziaPilha(p) && prioridade(p->l->primeiro->dado) >= prioridade(infixa[i])){
-				printf("%c\t%c\n", p->l->primeiro->dado, infixa[i]); //debug
-				printf("%i\t%i\n", prioridade(p->l->primeiro->dado), prioridade(infixa[i])); //debug
+				// printf("%c\t%c\n", p->l->primeiro->dado, infixa[i]); //debug
+				// printf("%i\t%i\n", prioridade(p->l->primeiro->dado), prioridade(infixa[i])); //debug
 				temp[0] = desempilhar(p);
 				if (!ehEscopo(temp[0]))
 					strcat(posfixa, temp);
 			}
 			empilhar(infixa[i], p);	
-		} else if (infixa[i] == '(' || infixa[i] == '[' || infixa[i] == '{'){
+		} else if (infixa[i] == '('){
 			empilhar(infixa[i], p);
-		} else if (infixa[i] == ')' || infixa[i] == ']' || infixa[i] == '}'){
-			switch(infixa[i]){
-				case ')':
-					do{
-						t = desempilhar(p);
-						if (t != '('){	
-							temp[0] = t;
-							strcat(posfixa, temp);
-						}
-					} while (t != '(');
-					break; 
-
-				case ']':
-					do{
-						t = desempilhar(p);
-						if (t != '['){	
-							temp[0] = t;
-							strcat(posfixa, temp);
-						};
-					} while (t != '[');
-					break;
-				case '}':
-					do{
-						t = desempilhar(p);
-						if (t != '{'){	
-							temp[0] = t;
-							strcat(posfixa, temp);
-						}
-					} while (t != '{');	
-					break;
-			}
+		} else if (infixa[i] == ')'){
+			do{
+				t = desempilhar(p);
+				if (t != '('){	
+					temp[0] = t;
+					strcat(posfixa, temp);
+				}
+			} while (t != '(');
 		}
-		printf("ch: %c\ttot: %s\n", infixa[i], posfixa); //debug
-		printPilha(p); //debug
+		// printf("ch: %c\ttot: %s\n", infixa[i], posfixa); //debug
+		// printPilha(p); //debug
 	}
 	while(!estaVaziaPilha(p)){
 		temp[0] = desempilhar(p);
 		temp[1] = ' ';
 		strcat(posfixa, temp);
 	}
-	printf("\nEXPRESSAO POSFIXA --> %s\n", posfixa); //debug
-	
-    float a, b, c;
-    t_pilhaf *pf = criaPilhaf();
-    
+	// printf("\nEXPRESSAO POSFIXA --> %s\n", posfixa); //debug
 	for (i = 0; i < strlen(posfixa); i++){
 		if(ehNumero(posfixa[i])){
 			empilharf((float)posfixa[i]-48, pf);
@@ -314,7 +282,7 @@ int main(int argc, char *argv[]) {
 					break;
 			}
 			empilharf(c, pf);
-			printPilhaf(pf); //debug
+			// printPilhaf(pf); //debug
 		}
 	}
 	printf("\nResultado: %.1f\n", desempilharf(pf));	

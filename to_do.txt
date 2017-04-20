@@ -7,10 +7,10 @@ algoritmo
 	//validacao da expressao
 		//todos os parenteses fecham
 		//ver 3.2 algoritmo no pilha.pdf
-	transformacao infixa-posfixa
-		ver 3.3 algoritmo no pilha.pdf
-	avaliacao
-		ver 3.4 algoritmo no pilha.pdf
+	//transformacao infixa-posfixa
+		//ver 3.3 algoritmo no pilha.pdf
+	//avaliacao
+		//ver 3.4 algoritmo no pilha.pdf
 relatorio
 	min. 5 paginas
 	ver 2.1 no pilha.pdf
