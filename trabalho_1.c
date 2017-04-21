@@ -216,9 +216,9 @@ int main(int argc, char *argv[]) {
 		while(!estaVaziaPilha(p))
 			desempilhar(p);
     }
-    printf("\nPOSFIXA --> %s\n", posfixa); //debug
-    puts(posfixa); //debug
-    printf("\n"); //debug
+    // printf("\nPOSFIXA --> %s\n", posfixa); //debug
+    // puts(posfixa); //debug
+    // printf("\n"); //debug
 	for (i = 0; i < strlen(infixa); i++) {
 		temp[0] = ' ';
 		temp[1] = ' ';
@@ -234,15 +234,11 @@ int main(int argc, char *argv[]) {
 			}
 		} else if (ehOperador(infixa[i])){
 			if (!estaVaziaPilha(p) && prioridade(p->l->primeiro->dado) >= prioridade(infixa[i])){
-				printf("%c\t%c\n", p->l->primeiro->dado, infixa[i]); //debug
-				printf("%i\t%i\n", prioridade(p->l->primeiro->dado), prioridade(infixa[i])); //debug
-				while(prioridade(p->l->primeiro->dado) >= prioridade(infixa[i])){
+				while(!estaVaziaPilha(p) && prioridade(p->l->primeiro->dado) >= prioridade(infixa[i])){
 					temp[0] = desempilhar(p);
 					if (!ehEscopo(temp[0]))
 						strcat(posfixa, temp);
-					printf("ESSE PRINT FUNCIONA\n");
 				}
-				printf("ESSE PRINT NAO FUNCIONA	\n");
 			}
 			empilhar(infixa[i], p);
 		} else if (infixa[i] == '('){
@@ -256,15 +252,15 @@ int main(int argc, char *argv[]) {
 				}
 			} while (t != '(');
 		}
-		printf("ch: %c\ttot: %s\n", infixa[i], posfixa); //debug
-		printPilha(p); //debug
+		// printf("ch: %c\ttot: %s\n", infixa[i], posfixa); //debug
+		// printPilha(p); //debug
 	}
 	while(!estaVaziaPilha(p)){
 		temp[0] = desempilhar(p);
 		temp[1] = ' ';
 		strcat(posfixa, temp);
 	}
-	printf("\nEXPRESSAO POSFIXA --> %s\n", posfixa); //debug
+	// printf("\nEXPRESSAO POSFIXA --> %s\n", posfixa); //debug
 	for (i = 0; i < strlen(posfixa); i++){
 		if(ehNumero(posfixa[i])){
 			empilharf((float)posfixa[i]-48, pf);
@@ -286,7 +282,7 @@ int main(int argc, char *argv[]) {
 					break;
 			}
 			empilharf(c, pf);
-			printPilhaf(pf); //debug
+			// printPilhaf(pf); //debug
 		}
 	}
 	printf("\nResultado: %.1f\n", desempilharf(pf));	
