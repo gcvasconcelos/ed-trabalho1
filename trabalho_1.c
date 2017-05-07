@@ -39,9 +39,8 @@ void insereInicio(char valor, t_lista *l) {
     novoprimeiro->dado = valor;
     novoprimeiro->proximo = l->primeiro;
     l->primeiro = novoprimeiro;
-    if(l->ultimo == NULL){
+    if(l->ultimo == NULL)
         l->ultimo = novoprimeiro;
-    }
 }
 int estaVazia(t_lista *l) {
     if(l->primeiro == NULL)
@@ -55,7 +54,7 @@ int removeInicio(t_lista *l) {
     t_elemento * removido = l->primeiro;
     l->primeiro = l->primeiro->proximo;
     free(removido);
-    if(l->primeiro == NULL) //nao precisava disso aqui (linha 98)
+    if(l->primeiro == NULL) 
        l->ultimo = NULL;
     return tmp;
 }
@@ -74,9 +73,9 @@ int estaVaziaPilha(t_pilha *p) {
     return estaVazia(p->l);
 }
 void printPilha(t_pilha *p) {
-	if (p->l->primeiro == NULL) {
+	if (p->l->primeiro == NULL) 
 		printf("Pilha vazia.\n");
-	} else {
+	else {
 		t_elemento *temp = p->l->primeiro;
 		int i = 0;
 
@@ -174,7 +173,7 @@ int prioridade(char ch) {
 	return 0;
 }
 int i_num;
-int strToFloat(char *str, int i) {
+int strToInt(char *str, int i) {
 	int n = 0;
 	char c_num[10] = "\0";
 	while (ehNumero(str[i])) {
@@ -263,7 +262,7 @@ int main(int argc, char *argv[]) {
 	for (i = 0; i < strlen(posfixa); i++) {
 		// printf("ch: %c\n", posfixa[i]); //debug
 		if (ehNumero(posfixa[i])) {
-			i = strToFloat(posfixa, i);
+			i = strToInt(posfixa, i);
 			// printf("float -> %.1f\n", (float)i_num); //debug
 			empilharf((float)i_num, pf);
 			// printPilhaf(pf); //debug
