@@ -12,13 +12,11 @@ algoritmo
 	//avaliacao
 		//ver 3.4 algoritmo no pilha.pdf
 relatorio
-	min. 5 paginas
-	ver 2.1 no pilha.pdf
+	//min. 5 paginas
+	//ver 2.1 no pilha.pdf
 apresentacao oral
-	slides
+	//slides
 	ate 10 min
 
 DATA DE ENTREGA: 09/05/2017 alchieri@unb.br
 	(versao digital + condigo fonte)
-
-http://www.vision.ime.usp.br/~pmiranda/mac122_2s14/aulas/aula13/aula13.html
